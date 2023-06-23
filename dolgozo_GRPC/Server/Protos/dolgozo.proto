@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server";
+package Dolgozo;
+
+service Dolgozo{
+	rpc GetDolgozo(DolgozoID) returns (DolgozoModel);
+	rpc ListDolgozok(Empty) returns (stream DolgozoModel);
+	rpc AddDolgozo(DolgozoModel) returns (Response);
+	rpc RemoveDolgozo(DolgozoID) returns (Response);
+	rpc UpdateDolgozo(DolgozoUpdate) returns (Response);
+}
+
+message Empty{}
+message DolgozoID{
+	int32 id = 1;
+}
+
+message DolgozoModel{
+	string nev = 1;
+	int32 reszleg_id = 2;
+	string foto_nev = 3;
+}
+
+message DolgozoUpdate{
+	DolgozoID id = 1;
+	DolgozoModel dolgozo = 2;
+}
+
+message Response{
+	int32 code = 1;
+}
