@@ -4,19 +4,20 @@ namespace Server.Services
 {
     public class DolgozoService:Dolgozo.DolgozoBase
     {
-        private byte MAX_SIZE = 100;
-        private List<DolgozoModel> dolgozok;
-        private sbyte index = -1;
-        public DolgozoService()
+        private const byte MAX_SIZE = 100;
+        private static List<DolgozoModel> dolgozok;
+        private static byte index;
+        //public DolgozoService() //minden kérésnél létrejön
+        static DolgozoService()
         {
             dolgozok = new List<DolgozoModel>(MAX_SIZE);
+            index = Byte.MaxValue;
         }
-
         public override Task<DolgozoModel> GetDolgozo(DolgozoID request, ServerCallContext context)
         {
-            if(request.Id < 0 || request.Id >= MAX_SIZE)
+            if(request.Id < 0 || request.Id >= dolgozok.Count)
             {
-                return Task.FromResult(new DolgozoModel() { Nev = "null" });
+                return Task.FromResult(new DolgozoModel());
             }
             return Task.FromResult(dolgozok[request.Id]);
         }
@@ -33,7 +34,7 @@ namespace Server.Services
             {
                 return Task.FromResult(new Response() { Code = 500 }); //megtelt a tömb
             }
-            dolgozok[index] = request;
+            dolgozok.Add(request);
 
             return Task.FromResult(new Response() { Code = 200 });
         }
